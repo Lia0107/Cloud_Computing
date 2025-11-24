@@ -1,0 +1,36 @@
+<div class="container-back pb-5 mb-3">
+  <div class="card-back">
+    <h1 class="text mt-4 mb-4 mx-5">Enjoy Your Dream Vacation</h1>
+    <div class="tab my-5 mx-5 py-4">
+      <button class="tablinks" [class.active]="activebook === 'user'" (click)="openbooking('user')">
+        <h3>User Profile</h3>
+      </button>
+      <button class="tablinks" [class.active]="activebook === 'booking-status'" (click)="openbooking('booking-status')">
+        <h3>Booking Status</h3>
+      </button>
+
+      <div id="book" class="tabcontent ps-5 pt-3" [hidden]="activebook !== 'user'">
+        <ng-container *ngIf="isLoggedIn; else loginMessage">
+          <div class="user-profile" *ngFor="let userData of userdataList">
+            <img [src]="getImageUrl(userData)" alt="user-image" class="user-image">
+
+            <p>First Name: {{ userData.user_firstname }}</p>
+            <p>Last Name: {{ userData.user_lastname }}</p>
+            <p>Email: {{ userData.user_email }}</p>
+            <!-- Add additional properties you have in the UserData model -->
+
+            <!-- Additional HTML code specific to user data -->
+          </div>
+        </ng-container>
+        <ng-template #loginMessage>
+          <p>Please login to continue.</p>
+          <p>Please proceed to login</p>
+        </ng-template>
+
+        <hr>
+      </div>
+
+      <div id="book" class="tabcontent ps-5 pt-3" [hidden]="activebook !== 'booking-status'"></div>
+    </div>
+  </div>
+</div>

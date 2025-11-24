@@ -1,0 +1,73 @@
+<div class="container-sm justify-content-md-center my-5">
+  <div class="row">
+    <div class="col">
+      <div class="circle-row">
+        <div class="circle-container">
+          <div class="outer-circle cursor-pointer" [ngClass]="{'blueBg': progress === 1}">
+            <div class="inner-circle" [ngClass]="{'blueBg': progress === 1}">
+              <div class="number">1</div>
+            </div>
+          </div>
+          <div class="text" [ngClass]="{'blueTxt': progress === 1}">
+            <strong>Find Travel Vouchers</strong>
+          </div>
+        </div>
+        <div class="circle-container">
+          <div class="outer-circle cursor-pointer" [ngClass]="{'blueBg': progress >= 2, 'reducedOpacity': progress < 2}">
+            <div class="inner-circle" [ngClass]="{'blueBg': progress >= 2}">
+              <div class="number">2</div>
+            </div>
+          </div>
+          <div class="text" [ngClass]="{'blueTxt': progress >= 2, 'reducedOpacity': progress < 2}">
+            <b>Enter Booking Details</b>
+          </div>
+        </div>
+        <div class="circle-container">
+          <div class="outer-circle" [ngClass]="{'blueBg': progress >= 3, 'reducedOpacity': progress < 3}">
+            <div class="inner-circle" [ngClass]="{'blueBg': progress >= 3}">
+              <div class="number">3</div>
+            </div>
+          </div>
+          <div class="text" [ngClass]="{'blueTxt': progress >= 3, 'reducedOpacity': progress < 3}">
+            <b>Make Payment</b>
+          </div>
+        </div>
+        <div class="circle-container">
+          <div class="outer-circle" [ngClass]="{'blueBg': progress >= 4, 'reducedOpacity': progress < 4}">
+            <div class="inner-circle" [ngClass]="{'blueBg': progress >= 4}">
+              <div class="number">4</div>
+            </div>
+          </div>
+          <div class="text" [ngClass]="{'blueTxt': progress >= 4, 'reducedOpacity': progress < 4}">
+            <b>Confirmation</b>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col" *ngFor="let attdata of displayData">
+        <div class="left mt-5">
+          <img [src]="attdata.att_image" alt="attraction-image" class="attraction-image">
+          <div class="right mt-3">
+            <h3>{{ attdata.att_name }}</h3>
+            <p class="mt-2">
+              {{ attdata.att_desc }}<br><br>
+              {{ attdata.att_location }}<br><br>
+              <ng-container *ngIf="formatTime(attdata.att_openHrs) === '24 Hours'">
+                {{ formatTime(attdata.att_openHrs) }}
+              </ng-container>
+              <ng-container *ngIf="formatTime(attdata.att_openHrs) !== '24 Hours'">
+                {{ formatTime(attdata.att_openHrs) }} - {{ formatTime(attdata.att_closeHrs) }}
+              </ng-container><br><br>
+              RM {{ attdata.att_price }}
+            </p>
+            <div class="right2 my-2">
+              <a href= "/cart" class="btn-sm float-right my-4 ">Add To Cart</a>
+              <a href="/booking-details" class="btn-sm float-right mx-3" (click)="redirectToBookingDetailsComponent(attdata)">Buy Now</a>
+            </div>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+

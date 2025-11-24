@@ -1,0 +1,50 @@
+<div class="circle-row">
+    <!-- Circle 1 -->
+    <div class="circle-container">
+      <div class="outer-circle cursor-pointer" [ngClass]="{'blueBg': progress === 1}">
+        <div class="inner-circle" [ngClass]="{'blueBg': progress === 1}">
+          <div class="number">1</div>
+        </div>
+      </div>
+      <div class="text" [ngClass]="{'blueTxt': progress === 1}">
+        <strong>Find Travel Vouchers</strong>
+      </div>
+    </div>
+
+    <!-- Circle 2 -->
+    <div class="circle-container">
+      <div class="outer-circle cursor-pointer" [ngClass]="{'blueBg': progress >= 2, 'reducedOpacity': progress == 2}">
+        <div class="inner-circle" [ngClass]="{'blueBg': progress >= 2}">
+          <div class="number">2</div>
+        </div>
+      </div>
+      <div class="text" [ngClass]="{'blueTxt': progress >= 2, 'reducedOpacity': progress == 2}">
+        <b>Enter Booking Details</b>
+      </div>
+    </div>
+
+    <!-- Circle 3 -->
+    <div class="circle-container">
+      <div class="outer-circle" [ngClass]="{'blueBg': progress >= 3, 'reducedOpacity': progress == 3}">
+        <div class="inner-circle" [ngClass]="{'blueBg': progress >= 3}">
+          <div class="number">3</div>
+        </div>
+      </div>
+      <div class="text" [ngClass]="{'blueTxt': progress >= 3, 'reducedOpacity': progress == 3}">
+        <b>Make Payment</b>
+      </div>
+    </div>
+
+    <!-- Circle 4 -->
+    <div class="circle-container">
+      <div class="outer-circle" [ngClass]="{'blueBg': progress >= 4, 'reducedOpacity': progress < 4}">
+        <div class="inner-circle" [ngClass]="{'blueBg': progress >= 4}">
+          <div class="number">4</div>
+        </div>
+      </div>
+      <div class="text" [ngClass]="{'blueTxt': progress >= 4, 'reducedOpacity': progress < 4}">
+        <b>Confirmation</b>
+      </div>
+    </div>
+  </div>
+

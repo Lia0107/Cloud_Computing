@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <!--Link to material-icons-->
+
+<nav class="topbar mx-5 mt-3">
+    <div class="topbar-left">
+        <img src="assets/img_component/travel-luggage_(light).svg">
+        <a href="/admin-dashboard"><h3>Penang E-Travel Admin</h3></a>
+    </div>
+    <div class="topbar-right" id="myTopnav">
+        <a href= "javascript:void(0);" class="icon mt-3" (click)="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+        <a routerLink= "/admin-att" class="routelink">Attractions</a>
+        <a routerLink= "/admin-eat" class="routelink">Eateries</a>
+        <a routerLink= "/homepage" class="routelink">User Site</a>
+        <button class="btn-logout" (click)="onAdminLogout()">Logout</button>
+    </div>
+</nav>

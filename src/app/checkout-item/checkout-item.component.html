@@ -1,0 +1,23 @@
+<div class="overflow-hidden">
+<div class="row">
+  <div class="col" *ngFor="let cartdata of selectedData">
+    <div class="order px-4 py-4">
+      <h2>Order Details</h2>
+      <div class="left mt-3">
+        <img [src]="cartdata.cart_item_image" alt="attraction-image" class="attraction-image"/>
+        <div class="right mt-3">
+          <h3 class="mb-4">{{ cartdata.cart_item_name }}</h3>
+          <h4 class="mt-2">
+            <strong>RM {{ cartdata.cart_item_price }}</strong>
+          </h4>
+          <hr>
+          <!-- <ng-container *ngIf="fromBookingPage"> -->
+          <strong>Quantity: {{ cartdata.cart_item_quantity }}</strong>
+          <p>Total: RM{{ convertToNumber(cartdata.cart_item_price) * convertToNumber(cartdata.cart_item_quantity) }}</p>
+          <!-- </ng-container> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

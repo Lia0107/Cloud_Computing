@@ -1,0 +1,92 @@
+<div class="overflow-hidden">
+  <div class="container mt-5">
+    <div class="row text-center">
+      <div class="col-sm-3">
+        <a href="/thingstodo" class="btn btn-lg blue">
+          Things to do
+          <img src="assets/img_component/ticket 1.svg">
+        </a>
+      </div>
+      <div class="col-sm-3">
+        <a href="/busstop" class="btn btn-lg blue">
+          Bus Stop
+          <img src="assets/img_component/bus-stop.svg">
+        </a>
+      </div>
+      <div class="col-sm-3">
+        <a href="/attractions" class="btn btn-lg blue">
+          Attractions
+          <img src="assets/img_component/attraction1.svg">
+        </a>
+      </div>
+      <div class="col-sm-3">
+        <a href="/eateries" class="btn btn-lg blue">
+          Eateries
+          <img src="assets/img_component/event.svg">
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <h1 class="text-center pt-5 pb-4 head">Attractions</h1>
+  
+  <div class="dropdown-filter" (click)="toggleFilterMenu()">
+    <button class="fa fa-filter align-right" type="button"> Filter</button>
+    <div class="filter-menu" [ngClass]="{ 'open': isFilterMenuOpen }">
+      <h5 class="mt-2">Filter by Category</h5>
+      <div class="checkbox-group">
+        <label *ngFor="let category of categories">
+          <input type="checkbox" [name]="category" (change)="filterAttractions($event)">
+          {{ category }}
+        </label>
+      </div>
+  
+      <h5 class="mt-3">Filter by Locations</h5>
+      <div class="checkbox-group">
+        <label *ngFor="let location of locations">
+          <input type="checkbox" [value]="location" (change)="filterByLocation($event)">
+          {{ location }}
+        </label>
+      </div>
+
+      <h5 class="mt-3">Filter by Price</h5>
+      <div class="checkbox-group">
+        <label *ngFor="let priceRange of priceRanges">
+          <input type="checkbox" [value]="priceRange" (change)="filterByPriceRange($event)">
+          {{ priceRange }}
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  <div class="container-sm justify-content-md-center mb-5">
+    <div class="row">
+      <div class="col" *ngFor="let attdata of displayData">
+        <a href="/attraction-dashboard" class="column-link" (click)="redirectToAttractionDashboardComponent(attdata)">
+          <h2 class="text-center mb-4">{{ attdata.att_name }}</h2>
+          <img [src]="getImageUrl(attdata)" alt="attraction-image" class="attraction-image">
+          <h5 class="att-desc my-4">
+            {{ attdata.att_desc }}<br><br>
+            {{ attdata.att_location }}<br><br>
+            <ng-container *ngIf="formatTime(attdata.att_openHrs) === '24 Hours'">
+              {{ formatTime(attdata.att_openHrs) }}
+            </ng-container>
+            <ng-container *ngIf="formatTime(attdata.att_openHrs) !== '24 Hours'">
+              {{ formatTime(attdata.att_openHrs) }} to {{ formatTime(attdata.att_closeHrs) }}
+            </ng-container><br><br>
+            RM {{ attdata.att_price }}
+          </h5>
+          <ng-container *ngIf="attdata.att_price !== '-'">
+            <a [routerLink]="'/cart'" (click)="addToCart(attdata)" class="btn-sm float-right">Add To Cart</a>
+            <a href="/booking-details" class="btn-sm float-right mx-3" (click)="redirectToBookingDetailsComponent(attdata)">Buy Now</a>
+          </ng-container>
+        </a>
+      </div>
+      <h5 (click)="showMore()" class="load">Load More</h5>
+    </div>
+  </div>
+  
+
+</div>

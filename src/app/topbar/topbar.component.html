@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<nav class="topbar mx-5 mt-3">
+    <div class="topbar-left">
+        <img src="assets/img_component/travel-luggage_(light).svg">
+        <ng-container *ngIf="!authenticationService.isLoggedIn">
+            <a routerLink="/homepage"><h3>Penang E-Travel</h3></a>
+        </ng-container>
+        
+        <ng-container *ngIf="authenticationService.isLoggedIn">
+            <a routerLink="/homepage"><h3>Penang E-Travel</h3></a>
+        </ng-container>
+        
+    </div>
+    <div class="topbar-right" id="myTopnav">
+        <a routerLink="javascript:void(0);" class="icon mt-3" (click)="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+        <a routerLink="/homepage" class="routelink">Home</a>
+        <a routerLink="/aboutus" class="routelink">About Us</a>
+        <a routerLink="/heroes" [matMenuTriggerFor]="newsMenu" class="routelink">News</a>
+        <mat-menu #newsMenu="matMenu">
+            <button mat-menu-item><a routerLink="/news">News</a></button>
+            <button mat-menu-item><a routerLink="/community">Community</a></button>
+            <button mat-menu-item><a routerLink="/events">Upcoming Events</a></button>
+        </mat-menu>
+
+        <a routerLink="/heroes" [matMenuTriggerFor]="categoriesMenu" class="routelink">All Categories</a>
+        <mat-menu #categoriesMenu="matMenu">
+            <button mat-menu-item><a routerLink="/thingstodo">Things to Do</a></button>
+            <button mat-menu-item><a routerLink="/attractions">Attractions</a></button>
+            <button mat-menu-item><a routerLink="/eateries">Eateries</a></button>
+            <button mat-menu-item><a routerLink="/busstop">Bus Stop</a></button>
+        </mat-menu>
+        
+        <div class="logout-container">
+            <a routerLink="/cart" class="routelink"><i class="material-icons">shopping_bag</i></a>
+            <ng-container *ngIf="!authenticationService.isLoggedIn">
+                <a routerLink="/login" class="routelink"><i class="fa fa-sign-in login"></i></a>
+            </ng-container>
+            <ng-container *ngIf="authenticationService.isLoggedIn">
+                <a routerLink="/user-dashboard" class="routelink"><i class="material-icons">person</i></a>
+                <button class="btn-logout" (click)="logout()">Logout</button>
+            </ng-container>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,70 @@
+<app-admin-topbar></app-admin-topbar>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 mt-2">
+            <!-- <div class="card mb-3">
+                <div class="form-floating mb-3">
+                    <h5 class="text-dark text-muted px-2 pt-2">Welcome, </h5>
+                </div>
+            </div> -->
+            <div class="card border-0 shadow p-3">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="attName" name="attname" [(ngModel)]="att_name">
+                    <label for="att_name">Attractions</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="attDesc" name="attdesc" [(ngModel)]="att_desc">
+                    <label for="att_desc">Description</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="time" class="form-control" id="attOpenHrs" name="attopenHrs" [(ngModel)]="att_openHrs" min="10:00" max="23:00">
+                    <label for="attopenHrs">Opening Hours</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="time" class="form-control" id="attCloseHrs" name="attcloseHrs" [(ngModel)]="att_closeHrs" min="10:00" max="23:00">
+                    <label for="attcloseHrs">Close Hours</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="attPrice" name="attprice" [(ngModel)]="att_price">
+                    <label for="attprice">Price</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="attLocation" name="attlocation" [(ngModel)]="att_location">
+                    <label for="attlocation">Address</label>
+                </div>
+                <button type="button" class="btn btn-outline-success" (click)="addAttraction()">Add</button><br>
+            </div>
+        </div>
+        <div class="col-md-8 mt-2 mb-3">
+            <h5 class="text-danger">Attraction Lists</h5>
+            <div class="card p-3">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Opening Hours</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let attdata of attdataList">
+                            <td>{{ attdata.att_name }}</td>
+                            <td>{{ attdata.att_desc }}</td>
+                            <td>{{ formatTime(attdata.att_openHrs) }} to {{ formatTime(attdata.att_closeHrs) }}</td>
+                            <td> RM {{ attdata.att_price }}</td>
+                            <td>{{ attdata.att_location }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-danger" (click)="deleteAttraction(attdata)">Delete</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
