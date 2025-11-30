@@ -1,6 +1,15 @@
-# Capstone
+# Cloud Computing
+
+## Download Node.js
+Navigate to `https://nodejs.org/`
+
+## Install angular CLI  
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.5.
+
+Run `npm install -g @angular/cli` if haven't install angular
+
+Run `ng version` to check version
 
 ## Development server
 
