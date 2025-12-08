@@ -112,12 +112,12 @@ const init = async () => {
     if (parseInt(productCount.rows[0].count) === 0) {
       await pool.query(`
         INSERT INTO products (name, description, price, category, stock_quantity, sku, image_url) VALUES
-        ('Laptop Pro 15"', 'High-performance laptop with 16GB RAM and 512GB SSD', 1299.99, 'Electronics', 50, 'LAP-001', 'https://via.placeholder.com/400x300?text=Laptop'),
-        ('Wireless Mouse', 'Ergonomic wireless mouse with long battery life', 29.99, 'Electronics', 200, 'MOU-001', 'https://via.placeholder.com/400x300?text=Mouse'),
-        ('Mechanical Keyboard', 'RGB backlit mechanical keyboard with blue switches', 89.99, 'Electronics', 75, 'KEY-001', 'https://via.placeholder.com/400x300?text=Keyboard'),
-        ('Office Chair', 'Ergonomic office chair with lumbar support', 249.99, 'Furniture', 30, 'CHA-001', 'https://via.placeholder.com/400x300?text=Chair'),
-        ('Standing Desk', 'Adjustable height standing desk 60x30 inches', 499.99, 'Furniture', 20, 'DES-001', 'https://via.placeholder.com/400x300?text=Desk'),
-        ('Monitor 27"', '4K UHD 27-inch monitor with HDR support', 399.99, 'Electronics', 40, 'MON-001', 'https://via.placeholder.com/400x300?text=Monitor');
+        ('Laptop Pro 15"', 'High-performance laptop with 16GB RAM and 512GB SSD', 1299.99, 'Electronics', 50, 'LAP-001', '/images/laptop.jpg'),
+        ('Wireless Mouse', 'Ergonomic wireless mouse with long battery life', 29.99, 'Electronics', 200, 'MOU-001', '/images/wireless%20mouse.jpg'),
+        ('Mechanical Keyboard', 'RGB backlit mechanical keyboard with blue switches', 89.99, 'Electronics', 75, 'KEY-001', '/images/mechanical%20keyboard.jpg'),
+        ('Office Chair', 'Ergonomic office chair with lumbar support', 249.99, 'Furniture', 30, 'CHA-001', '/images/office%20chair.jpg'),
+        ('Standing Desk', 'Adjustable height standing desk 60x30 inches', 499.99, 'Furniture', 20, 'DES-001', '/images/standing%20desk.jpg'),
+        ('Monitor 27"', '4K UHD 27-inch monitor with HDR support', 399.99, 'Electronics', 40, 'MON-001', '/images/monitor.jpg');
       `);
       console.log('Sample products inserted');
     }

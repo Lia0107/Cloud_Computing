@@ -1,32 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShoppingCartIcon, UserIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { UserIcon, Bars3Icon, XMarkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import './Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
-
-  React.useEffect(() => {
-    if (user) {
-      // Fetch cart count
-      fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/cart`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.items) {
-            setCartCount(data.items.length);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [user]);
 
   const handleLogout = () => {
     logout();
@@ -51,31 +33,38 @@ const Navbar = () => {
           </button>
 
           <ul className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
-            <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link></li>
-            
+              {user && user.role === 'admin' ? null : <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>}
+
             {user ? (
-              <>
-                <li>
-                  <Link to="/cart" onClick={() => setMenuOpen(false)} className="cart-link">
-                    <ShoppingCartIcon className="icon" />
-                    {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/orders" onClick={() => setMenuOpen(false)}>Orders</Link>
-                </li>
-                {user.role === 'admin' && (
-                  <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Admin</Link></li>
-                )}
-                <li className="user-menu">
-                  <Link to="/profile" onClick={() => setMenuOpen(false)}>
-                    <UserIcon className="icon" />
-                    {user.firstName}
-                  </Link>
-                  <button onClick={handleLogout} className="logout-btn">Logout</button>
-                </li>
-              </>
+              user.role === 'admin' ? (
+                <>
+                  <li><Link to="/admin" onClick={() => setMenuOpen(false)}>Dashboard</Link></li>
+                  <li className="user-menu">
+                    <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                      <UserIcon className="icon" />
+                      {user.firstName}
+                    </Link>
+                    <button onClick={handleLogout} className="logout-btn">Logout</button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li><Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link></li>
+                  <li>
+                    <Link to="/cart" onClick={() => setMenuOpen(false)} className="cart-link">
+                      <ShoppingCartIcon className="icon" />
+                    </Link>
+                  </li>
+                  <li><Link to="/orders" onClick={() => setMenuOpen(false)}>Orders</Link></li>
+                  <li className="user-menu">
+                    <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                      <UserIcon className="icon" />
+                      {user.firstName}
+                    </Link>
+                    <button onClick={handleLogout} className="logout-btn">Logout</button>
+                  </li>
+                </>
+              )
             ) : (
               <>
                 <li><Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link></li>

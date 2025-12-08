@@ -3,9 +3,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const db = require('../config/database');
+const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const ADMIN_SIGNUP_CODE = process.env.ADMIN_SIGNUP_CODE || '';
 
 // Register new user
 router.post('/register', [
@@ -13,6 +15,8 @@ router.post('/register', [
   body('password').isLength({ min: 6 }),
   body('firstName').trim().notEmpty(),
   body('lastName').trim().notEmpty(),
+  body('role').optional().isIn(['customer', 'admin']),
+  body('adminCode').optional().isString(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -20,7 +24,16 @@ router.post('/register', [
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, role: requestedRole, adminCode } = req.body;
+
+    // Decide role: default customer, allow admin only with matching code
+    let role = 'customer';
+    if (requestedRole === 'admin') {
+      if (!adminCode || adminCode !== ADMIN_SIGNUP_CODE) {
+        return res.status(403).json({ message: 'Invalid admin signup code' });
+      }
+      role = 'admin';
+    }
 
     // Check if user exists
     const existingUser = await db.query('SELECT id FROM users WHERE email = $1', [email]);
@@ -33,8 +46,8 @@ router.post('/register', [
 
     // Create user
     const result = await db.query(
-      'INSERT INTO users (email, password_hash, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING id, email, first_name, last_name, role',
-      [email, passwordHash, firstName, lastName]
+      'INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, email, first_name, last_name, role',
+      [email, passwordHash, firstName, lastName, role]
     );
 
     const user = result.rows[0];
@@ -135,6 +148,40 @@ router.get('/me', async (req, res) => {
     res.json({ user: result.rows[0] });
   } catch (error) {
     res.status(401).json({ message: 'Invalid token' });
+  }
+});
+
+// Change password (authenticated users)
+router.post('/change-password', authenticate, [
+  body('oldPassword').isLength({ min: 1 }),
+  body('newPassword').isLength({ min: 6 }),
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { oldPassword, newPassword } = req.body;
+
+    const result = await db.query('SELECT id, password_hash FROM users WHERE id = $1', [req.user.id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const user = result.rows[0];
+    const isValid = await bcrypt.compare(oldPassword, user.password_hash);
+    if (!isValid) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+    await db.query('UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newHash, req.user.id]);
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ message: 'Failed to change password' });
   }
 });
 
