@@ -10,6 +10,8 @@ const Register = () => {
     password: '',
     firstName: '',
     lastName: '',
+    adminCode: '',
+    role: 'customer',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,11 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/register', formData);
+      const payload = { ...formData };
+      if (formData.adminCode.trim()) {
+        payload.role = 'admin';
+      }
+      const response = await api.post('/auth/register', payload);
       login(response.data.token, response.data.user);
       navigate('/');
     } catch (err) {
@@ -83,6 +89,18 @@ const Register = () => {
               className="input"
             />
             <small>Minimum 6 characters</small>
+          </div>
+
+          <div className="form-group">
+            <label>Admin signup code (optional):</label>
+            <input
+              type="text"
+              value={formData.adminCode}
+              onChange={(e) => setFormData({ ...formData, adminCode: e.target.value })}
+              className="input"
+              placeholder="Leave blank for customer account"
+            />
+            <small>Enter the shared admin code to create an admin account.</small>
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={loading}>

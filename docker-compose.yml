@@ -37,6 +37,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_SSL: "false"
       JWT_SECRET: ${JWT_SECRET:-change-this-secret-key}
+      ADMIN_SIGNUP_CODE: ${ADMIN_SIGNUP_CODE:-}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}

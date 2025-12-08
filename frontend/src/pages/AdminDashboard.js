@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import api from '../services/api';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('analytics');
+  const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '' });
+  const [passwordMsg, setPasswordMsg] = useState('');
+  const [passwordErr, setPasswordErr] = useState('');
 
   const { data: orders } = useQuery('admin-orders', async () => {
     const response = await api.get('/orders/admin/all');
     return response.data;
   });
 
-  const { data: products } = useQuery('admin-products', async () => {
-    const response = await api.get('/products');
-    return response.data.products;
+  const { data: me } = useQuery('admin-me', async () => {
+    const response = await api.get('/auth/me');
+    return response.data.user;
   });
 
   const updateOrderStatusMutation = useMutation(
@@ -29,20 +32,35 @@ const AdminDashboard = () => {
     }
   );
 
+  const changePasswordMutation = useMutation(
+    async () => {
+      const response = await api.post('/auth/change-password', passwordForm);
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        setPasswordMsg(data.message || 'Password updated');
+        setPasswordErr('');
+        setPasswordForm({ oldPassword: '', newPassword: '' });
+      },
+      onError: (error) => {
+        setPasswordMsg('');
+        setPasswordErr(error.response?.data?.message || 'Failed to update password');
+      },
+    }
+  );
+
   const handleStatusChange = (orderId, newStatus) => {
     updateOrderStatusMutation.mutate({ orderId, status: newStatus });
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
-      pending: '#f59e0b',
-      processing: '#3b82f6',
-      shipped: '#8b5cf6',
-      delivered: '#10b981',
-      cancelled: '#ef4444',
-    };
-    return colors[status] || '#6b7280';
-  };
+  const analytics = useMemo(() => {
+    const totalOrders = orders?.length || 0;
+    const totalRevenue = orders?.reduce((sum, o) => sum + Number(o.total_amount || 0), 0) || 0;
+    const pending = orders?.filter(o => o.status === 'pending').length || 0;
+    const delivered = orders?.filter(o => o.status === 'delivered').length || 0;
+    return { totalOrders, totalRevenue, pending, delivered };
+  }, [orders]);
 
   return (
     <div className="admin-dashboard">
@@ -51,18 +69,48 @@ const AdminDashboard = () => {
 
         <div className="admin-tabs">
           <button
+            className={activeTab === 'analytics' ? 'active' : ''}
+            onClick={() => setActiveTab('analytics')}
+          >
+            Analytics
+          </button>
+          <button
             className={activeTab === 'orders' ? 'active' : ''}
             onClick={() => setActiveTab('orders')}
           >
             Orders
           </button>
           <button
-            className={activeTab === 'products' ? 'active' : ''}
-            onClick={() => setActiveTab('products')}
+            className={activeTab === 'profile' ? 'active' : ''}
+            onClick={() => setActiveTab('profile')}
           >
-            Products
+            Profile
           </button>
         </div>
+
+        {activeTab === 'analytics' && (
+          <div className="admin-section">
+            <h2>Overview</h2>
+            <div className="admin-metrics">
+              <div className="metric-card">
+                <p>Total Orders</p>
+                <h3>{analytics.totalOrders}</h3>
+              </div>
+              <div className="metric-card">
+                <p>Total Revenue</p>
+                <h3>${analytics.totalRevenue.toFixed(2)}</h3>
+              </div>
+              <div className="metric-card">
+                <p>Pending</p>
+                <h3>{analytics.pending}</h3>
+              </div>
+              <div className="metric-card">
+                <p>Delivered</p>
+                <h3>{analytics.delivered}</h3>
+              </div>
+            </div>
+          </div>
+        )}
 
         {activeTab === 'orders' && (
           <div className="admin-section">
@@ -112,32 +160,46 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'products' && (
+        {activeTab === 'profile' && (
           <div className="admin-section">
-            <h2>All Products</h2>
-            {products && products.length > 0 ? (
-              <div className="admin-products-list">
-                {products.map(product => (
-                  <div key={product.id} className="admin-product-card">
-                    <img
-                      src={product.image_url || 'https://via.placeholder.com/100x100?text=Product'}
-                      alt={product.name}
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/100x100?text=Product';
-                      }}
-                    />
-                    <div className="product-details">
-                      <h3>{product.name}</h3>
-                      <p>Category: {product.category}</p>
-                      <p>Price: ${parseFloat(product.price).toFixed(2)}</p>
-                      <p>Stock: {product.stock_quantity}</p>
-                    </div>
-                  </div>
-                ))}
+            <h2>Profile</h2>
+            {me && (
+              <div className="profile-card">
+                <p><strong>Email:</strong> {me.email}</p>
+                <p><strong>Name:</strong> {me.first_name} {me.last_name}</p>
+                <p><strong>Role:</strong> {me.role}</p>
+                <p><strong>Joined:</strong> {new Date(me.created_at).toLocaleString()}</p>
               </div>
-            ) : (
-              <p>No products found</p>
             )}
+            <h3 style={{ marginTop: '1.5rem' }}>Change Password</h3>
+            {passwordMsg && <div className="success">{passwordMsg}</div>}
+            {passwordErr && <div className="error">{passwordErr}</div>}
+            <div className="form-group">
+              <label>Current Password</label>
+              <input
+                type="password"
+                value={passwordForm.oldPassword}
+                onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
+                className="input"
+              />
+            </div>
+            <div className="form-group">
+              <label>New Password</label>
+              <input
+                type="password"
+                value={passwordForm.newPassword}
+                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                className="input"
+                minLength={6}
+              />
+            </div>
+            <button
+              className="btn btn-primary"
+              onClick={() => changePasswordMutation.mutate()}
+              disabled={changePasswordMutation.isLoading}
+            >
+              {changePasswordMutation.isLoading ? 'Updating...' : 'Update Password'}
+            </button>
           </div>
         )}
       </div>
