@@ -34,6 +34,7 @@ const Navbar = () => {
 
           <ul className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
               {user && user.role === 'admin' ? null : <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>}
+              {user && user.role === 'admin' ? null : <li><Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link></li>}
 
             {user ? (
               user.role === 'admin' ? (
@@ -49,7 +50,6 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <li><Link to="/products" onClick={() => setMenuOpen(false)}>Products</Link></li>
                   <li>
                     <Link to="/cart" onClick={() => setMenuOpen(false)} className="cart-link">
                       <ShoppingCartIcon className="icon" />

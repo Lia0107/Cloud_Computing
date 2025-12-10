@@ -1,18 +1,21 @@
 # Build stage
 FROM node:18-alpine as build
-
 WORKDIR /app
 
-# Copy package files
+# 1) Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# 2) Install deps
 RUN npm install --legacy-peer-deps
 
-# Copy application files
+# 3) Copy the rest of the app (so /src and /public are available)
 COPY . .
 
-# Build application
+# 4) Pass API URL from build arg
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
+# 5) Build React
 RUN npm run build
 
 # Production stage
