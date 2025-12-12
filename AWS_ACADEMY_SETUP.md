@@ -595,28 +595,28 @@ Your VPC architecture should now have:
    Paste the following (replace with your actual values):
    ```env
    # Database Configuration
-   DB_HOST=ecommerce-db.cjtmj2ilkkqo.us-east-1.rds.amazonaws.com
+   DB_HOST=YOUR-RDS-ENDPOINT
    DB_PORT=5432
    DB_NAME=ecommerce
    DB_USER=postgres
-   DB_PASSWORD=ecommerce123
+   DB_PASSWORD=YOUR-DB-PASSWORD
    DB_SSL=true
 
    # JWT Secret (generate a random string)
-   JWT_SECRET=ecommerce-jwt-secret-key-aws-academy-2025-xyz123abc456
+   JWT_SECRET=your-super-secret-jwt-key-change-this-to-random-string
 
    # Frontend URL - Use ALB DNS name
-   FRONTEND_URL=http://ecommerce-alb-1073842211.us-east-1.elb.amazonaws.com
+   FRONTEND_URL=http://YOUR-ALB-DNS-NAME
 
    # Backend API URL - Use ALB DNS name
-   REACT_APP_API_URL=http://ecommerce-alb-1073842211.us-east-1.elb.amazonaws.com/api
+   REACT_APP_API_URL=http://YOUR-ALB-DNS-NAME/api
 
    # AWS Configuration
-   AWS_ACCESS_KEY_ID=ASIAZNISTHURDQW7VFGQ
-   AWS_SECRET_ACCESS_KEY=+z8Qyq7ROwVP2ijGKIcyu5BePI8Zv4qQFvc+iT1z
-   AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEAIaCXVzLXdlc3QtMiJIMEYCIQCTP+Y2HwrLSAQeGTz4CSOZ+SIuPwSAjy5I+2lLyKZcDgIhAMigmQCNqaAtJd/ck9uoU1Hkr3j7xFJy7DIYG/dmSFAsKr4CCMv//////////wEQABoMNjQ2OTY4NDU4NTMwIgxdt87uV8L0M6wv2FkqkgJAookeYxsW4qMorAxU32jrEAbAK0q0B8DdSt0llhMcgCm8HChtihOnUHzRcYCB8al1f7k2AkMvy8pf4iD8u+b/IbzlsXwMrknnr8UgM15mat7/bZH04wpsIc9BJW643hANNTEneIWIzOfA6qsk19O/opZFXARVlPrVVWsEwK3ujvwl6lefnu2sUm5VsrchgJ0W9AWPzn5sb001UPYFupjv6Cy29/C/Co+bPBUP2XatrvWtQeX9aExujQDzJBarAA/f9LDFUg5kwT3UeaCbgDRcPB0PdqZShcRDyS1L1JAWzbGjXKm8VMIBzFw06SQ1KZ8XlL+xDiXu1qiun/bAZO+oZbAC0z++TCFvI7D2BFyYQvLNMN2t48kGOpwBMNm/F01mS1zAVFI9AKoAmWajUiYsZbVZqDNcGlOy2WdDfZjMt6rzta8etLqWDkiLbR3dtR2LmmNUGkLTzjZB0r0OFmHO3Y/t3QmC6LsNOjGUdoumiPpalochPnraI0Jog3OsynF7s637M85UecJzVAjFAHiPk7Ogmyf9qKHLFulzI0g1vjpXx0XW8Ubmg4OQBRJaW7SR/J//AUpt
+   AWS_ACCESS_KEY_ID=YOUR-AWS-ACCESS-KEY
+   AWS_SECRET_ACCESS_KEY=YOUR-AWS-SECRET-KEY
+   AWS_SESSION_TOKEN=YOUR-AWS-SESSION-TOKEN
    AWS_REGION=us-east-1
-   S3_BUCKET_NAME=ecommerce-images-22018097
+   S3_BUCKET_NAME=ecommerce-images-YOUR-STUDENT-ID
 
    # Node Environment
    NODE_ENV=production
