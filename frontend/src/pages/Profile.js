@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
 
   const { data: profile } = useQuery(
@@ -37,7 +39,11 @@ const Profile = () => {
     },
     {
       onSuccess: () => {
-        alert('Password changed successfully');
+        alert('Password changed successfully! Please login with your new password.');
+        setTimeout(() => {
+          logout();
+          navigate('/login');
+        }, 1000);
       },
     }
   );

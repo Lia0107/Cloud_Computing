@@ -767,7 +767,7 @@ Your VPC architecture should now have:
    - Go to **Launch Templates** → **Create launch template**
    - **Name**: `ecommerce-launch-template`
    - **AMI**: Select your created AMI
-   - **Instance type**: t2.micro
+   - **Instance type**: t3.micro
    - **Key pair**: ecommerce-key
    - **Security group**: ecommerce-app-sg
    - Click **Create launch template**
