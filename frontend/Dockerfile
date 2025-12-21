@@ -2,7 +2,11 @@
 FROM node:18-alpine as build
 WORKDIR /app
 
-# 1) Copy package files
+# Accept build arguments
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+
+# Copy package files
 COPY package*.json ./
 
 # 2) Install deps
