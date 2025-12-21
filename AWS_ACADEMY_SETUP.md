@@ -167,7 +167,7 @@ VPC (10.0.0.0/16)
    - Click **Save changes**
 
 7. **Associate Public Subnets:**
-   - Click **Subnet associations** tab → **Edit subnet associations**
+   - Click **Subnet associations** tab under route table section → **Edit subnet associations**
    - Select both:
      - `ecommerce-public-subnet-1a`
      - `ecommerce-public-subnet-1b`
@@ -188,7 +188,7 @@ VPC (10.0.0.0/16)
    - Click **Save changes**
 
 6. **Associate Private Subnets:**
-   - Click **Subnet associations** tab → **Edit subnet associations**
+   - Click **Subnet associations** tab under route table section → **Edit subnet associations**
    - Select both:
      - `ecommerce-private-subnet-1a`
      - `ecommerce-private-subnet-1b`
@@ -205,6 +205,33 @@ Your VPC architecture should now have:
 - ✅ 1 Public Route Table (routes to IGW)
 - ✅ 1 Private Route Table (routes to NAT)
 
+#### 2.8 Create VPC Endpoint for S3 (Recommended)
+
+> [!TIP]
+> VPC Endpoints allow private connections to S3 without going through the internet, saving NAT Gateway costs and improving security.
+
+1. **Navigate to VPC Endpoints**
+   - In VPC Console, click **Endpoints** in left menu
+   - Click **Create endpoint**
+
+2. **Configure S3 Gateway Endpoint**
+   - **Name tag**: `ecommerce-s3-endpoint`
+   - **Service category**: AWS services
+   - **Services**: Search and select `com.amazonaws.us-east-1.s3` (Type: Gateway)
+   - **VPC**: Select `ecommerce-vpc`
+   - **Route tables**: Select `ecommerce-private-rt`
+   - **Policy**: Full access (default)
+   - Click **Create endpoint**
+
+3. **Benefits**
+   - ✅ **Free** - No data transfer charges for S3 access
+   - ✅ **Faster** - Traffic stays on AWS private network
+   - ✅ **Secure** - No internet exposure for S3 traffic
+   - ✅ **Automatic** - EC2 instances automatically use the endpoint
+
+> [!NOTE]
+> The endpoint automatically adds a route to the selected route table, allowing private subnet instances to access S3 without NAT Gateway charges.
+
 ---
 
 ### Step 3: Create S3 Bucket for Product Images
@@ -217,6 +244,10 @@ Your VPC architecture should now have:
    - **Bucket name**: `ecommerce-images-[your-student-id]` (must be globally unique)
    - **AWS Region**: `us-east-1` (or your preferred region)
    - **Block Public Access**: Uncheck "Block all public access"
+   - **Versioning**: Enable
+   - **Default encryption**: SSE-S3
+   - **Bucket Key**: Enable
+   - **Object Lock**: Disable
    - Check the acknowledgment box
    - Click **Create bucket**
 
@@ -278,10 +309,15 @@ Your VPC architecture should now have:
    - Creates primary database in one AZ and standby in another AZ
 
 5. **Settings**
-   - **DB instance identifier**: `ecommerce-db`
-   - **Credentials management**: **Managed in AWS Secrets Manager** (recommended)
+   - **DB instance identifier**: `ecommercedb`
+   - **Credentials management**: **Self managed** (AWS Secrets Manager not available in Academy)
    - **Master username**: `postgres`
-   - **Encryption key**: `aws/secretsmanager` (default)
+   - **Master password**: Create a strong password (e.g., `Ecommerce123!`)
+   - **Confirm password**: Re-enter the same password
+   
+   > [!IMPORTANT]
+   > **Save your password!** AWS Academy does NOT support Secrets Manager. Write down your password - you'll need it for the `.env` file.
+
 
 6. **Instance Configuration**
    - **DB instance class**: 
@@ -359,6 +395,8 @@ Your VPC architecture should now have:
    - **File format**: 
      - `.pem` for Mac/Linux
      - `.ppk` for Windows (PuTTY)
+   - **Use puttygen to convert .ppk to .pem**
+   - **Conversions menu -> Export OpenSSH key**
    - Click **Create key pair**
    - **Save the downloaded file securely!**
 
@@ -621,7 +659,9 @@ Your VPC architecture should now have:
    # Node Environment
    NODE_ENV=production
    ```
-
+   # Admin Configuration
+   ADMIN_SIGNUP_CODE=MyAdminCode12345
+   
    Save with `Ctrl+X`, then `Y`, then `Enter`
 
 5. **Build and Start Application**
@@ -953,6 +993,7 @@ Use this checklist to track your progress:
 - [ ] Public route table configured (routes to IGW)
 - [ ] Private route table configured (routes to NAT)
 - [ ] Subnets associated with route tables
+- [ ] VPC Endpoint for S3 created (cost savings)
 
 **Core Services:**
 - [ ] AWS Academy lab session started
