@@ -11,7 +11,7 @@ const ADMIN_SIGNUP_CODE = process.env.ADMIN_SIGNUP_CODE || '';
 
 // Register new user
 router.post('/register', [
-  body('email').isEmail().normalizeEmail(),
+  body('email').isEmail(),
   body('password').isLength({ min: 6 }),
   body('firstName').trim().notEmpty(),
   body('lastName').trim().notEmpty(),
@@ -78,7 +78,7 @@ router.post('/register', [
 
 // Login
 router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
+  body('email').isEmail(),
   body('password').notEmpty(),
 ], async (req, res) => {
   try {
@@ -153,7 +153,7 @@ router.get('/me', async (req, res) => {
 
 // Update email (authenticated users)
 router.post('/update-email', authenticate, [
-  body('newEmail').isEmail().normalizeEmail(),
+  body('newEmail').isEmail(),
   body('password').notEmpty(),
 ], async (req, res) => {
   try {
