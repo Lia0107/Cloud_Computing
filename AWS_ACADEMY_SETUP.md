@@ -570,26 +570,16 @@ Your VPC architecture should now have:
 
 1. **Connect via SSH (Through Bastion Host)**
 
-   **For Mac/Linux:**
-   ```bash
-   # First, SSH into bastion
-   chmod 400 ecommerce-key.pem
-   ssh -i ecommerce-key.pem ubuntu@BASTION-PUBLIC-IP
-   
-   # From bastion, SSH into app server
-   ssh ubuntu@EC2-PRIVATE-IP
-   ```
-   
-   **Or use SSH ProxyJump (one command):**
-   ```bash
-   ssh -i ecommerce-key.pem -J ubuntu@BASTION-PUBLIC-IP ubuntu@EC2-PRIVATE-IP
-   ```
-
    **For Windows (PuTTY):**
    - Open PuTTY
    - Host: `ubuntu@YOUR-EC2-PUBLIC-IP`
    - Connection → SSH → Auth → Browse for your `.ppk` file
    - Click Open
+   # Set correct permissions
+   chmod 400 ~/ecommerce-key.pem
+
+   # SSH to app server:
+   ssh -i ~/ecommerce-key.pem ubuntu@YOUR-EC2-PRIVATE-IP
 
 2. **Verify Docker Installation**
    ```bash
@@ -624,6 +614,23 @@ Your VPC architecture should now have:
    # On your local machine:
    scp -i ecommerce-key.pem -r "d:\Cloud Computing\Cloud_Computing" ubuntu@YOUR-EC2-IP:~/
    ```
+
+
+   phase 1 : deploy application
+   
+   # On app server
+   cd ~/Cloud_Computing
+   nano .env  # Use temporary values for now
+
+   # Temporary .env (without ALB):
+   FRONTEND_URL=http://localhost
+   REACT_APP_API_URL=http://localhost:5000/api
+
+   # Deploy 
+   docker-compose up -d --build
+
+   # Test locally
+curl http://localhost:5000/api/health
 
 4. **Create Environment File**
    ```bash
@@ -701,38 +708,6 @@ Your VPC architecture should now have:
    ```
 
 ---
-
-### Step 10: Access Your Application
-
-1. **Get ALB DNS Name**
-   - Go to **EC2 Console** → **Load Balancers**
-   - Select `ecommerce-alb`
-   - Copy the **DNS name** (e.g., `ecommerce-alb-xxxxx.us-east-1.elb.amazonaws.com`)
-
-2. **Open Browser**
-   - Navigate to: `http://YOUR-ALB-DNS-NAME`
-   - You should see your e-commerce application!
-
-3. **Test Backend API**
-   - Navigate to: `http://YOUR-ALB-DNS-NAME/api/health`
-   - Should return: `{"status":"ok"}`
-
-4. **Create Admin Account**
-   - Register a new user through the UI
-   - Or use API:
-   ```bash
-   curl -X POST http://YOUR-ALB-DNS-NAME/api/auth/register \
-     -H "Content-Type: application/json" \
-     -d '{
-       "email":"admin@example.com",
-       "password":"Admin123!",
-       "firstName":"Admin",
-       "lastName":"User"
-     }'
-   ```
-
----
-
 ## 🔧 Required: Set Up Load Balancer and Auto Scaling
 
 > [!IMPORTANT]
@@ -749,7 +724,7 @@ Your VPC architecture should now have:
    - **VPC**: `ecommerce-vpc` (select your custom VPC, NOT default VPC)
    - **Health check path**: `/`
    - Click **Next**
-   - Select your EC2 instance
+   - Select your EC2 instance, app server
    - Click **Include as pending below**
    - Click **Create target group**
 
@@ -798,7 +773,7 @@ Your VPC architecture should now have:
 
 1. **Create AMI from Instance**
    - Go to **EC2 Console** → **Instances**
-   - Select your instance
+   - Select your instance app server
    - **Actions** → **Image and templates** → **Create image**
    - **Name**: `ecommerce-app-ami`
    - Click **Create image**
@@ -830,12 +805,46 @@ Your VPC architecture should now have:
    - **Scaling policies**: Target tracking
    - **Metric**: Average CPU utilization
    - **Target value**: 70
+   -Additional settings go check monitoring
    - Click **Create Auto Scaling group**
 
 > [!NOTE]
 > Auto Scaling Group will automatically launch instances in both AZs for high availability.
 
 ---
+
+### Step 10: Access Your Application
+
+1. **Get ALB DNS Name**
+   - Go to **EC2 Console** → **Load Balancers**
+   - Select `ecommerce-alb`
+   - Copy the **DNS name** (e.g., `ecommerce-alb-xxxxx.us-east-1.elb.amazonaws.com`)
+
+2. **Open Browser**
+   - Navigate to: `http://YOUR-ALB-DNS-NAME`
+   - You should see your e-commerce application!
+
+3. **Test Backend API**
+   - Navigate to: `http://YOUR-ALB-DNS-NAME/api/health`
+   - Should return: `{"status":"ok"}`
+
+4. **Create Admin Account**
+   - Register a new user through the UI
+   - Or use API:
+   ```bash
+   curl -X POST http://YOUR-ALB-DNS-NAME/api/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email":"admin@example.com",
+       "password":"Admin123!",
+       "firstName":"Admin",
+       "lastName":"User"
+     }'
+   ```
+
+---
+
+
 
 ## 📊 Monitoring and Maintenance
 

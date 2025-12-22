@@ -9,6 +9,9 @@ const AdminDashboard = () => {
   const [passwordForm, setPasswordForm] = useState({ oldPassword: '', newPassword: '' });
   const [passwordMsg, setPasswordMsg] = useState('');
   const [passwordErr, setPasswordErr] = useState('');
+  const [emailForm, setEmailForm] = useState({ newEmail: '', password: '' });
+  const [emailMsg, setEmailMsg] = useState('');
+  const [emailErr, setEmailErr] = useState('');
 
   const { data: orders } = useQuery('admin-orders', async () => {
     const response = await api.get('/orders/admin/all');
@@ -46,6 +49,25 @@ const AdminDashboard = () => {
       onError: (error) => {
         setPasswordMsg('');
         setPasswordErr(error.response?.data?.message || 'Failed to update password');
+      },
+    }
+  );
+
+  const updateEmailMutation = useMutation(
+    async () => {
+      const response = await api.post('/auth/update-email', emailForm);
+      return response.data;
+    },
+    {
+      onSuccess: (data) => {
+        setEmailMsg(data.message || 'Email updated successfully');
+        setEmailErr('');
+        setEmailForm({ newEmail: '', password: '' });
+        queryClient.invalidateQueries('admin-me');
+      },
+      onError: (error) => {
+        setEmailMsg('');
+        setEmailErr(error.response?.data?.message || 'Failed to update email');
       },
     }
   );
@@ -171,6 +193,37 @@ const AdminDashboard = () => {
                 <p><strong>Joined:</strong> {new Date(me.created_at).toLocaleString()}</p>
               </div>
             )}
+            
+            <h3 style={{ marginTop: '1.5rem' }}>Update Email</h3>
+            {emailMsg && <div className="success">{emailMsg}</div>}
+            {emailErr && <div className="error">{emailErr}</div>}
+            <div className="form-group">
+              <label>New Email</label>
+              <input
+                type="email"
+                value={emailForm.newEmail}
+                onChange={(e) => setEmailForm({ ...emailForm, newEmail: e.target.value })}
+                className="input"
+                placeholder="bigbang.gzy@gmail.com"
+              />
+            </div>
+            <div className="form-group">
+              <label>Current Password (for verification)</label>
+              <input
+                type="password"
+                value={emailForm.password}
+                onChange={(e) => setEmailForm({ ...emailForm, password: e.target.value })}
+                className="input"
+              />
+            </div>
+            <button
+              className="btn btn-primary"
+              onClick={() => updateEmailMutation.mutate()}
+              disabled={updateEmailMutation.isLoading}
+            >
+              {updateEmailMutation.isLoading ? 'Updating...' : 'Update Email'}
+            </button>
+
             <h3 style={{ marginTop: '1.5rem' }}>Change Password</h3>
             {passwordMsg && <div className="success">{passwordMsg}</div>}
             {passwordErr && <div className="error">{passwordErr}</div>}
