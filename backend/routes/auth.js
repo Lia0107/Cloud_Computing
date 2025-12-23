@@ -151,50 +151,6 @@ router.get('/me', async (req, res) => {
   }
 });
 
-// Update email (authenticated users)
-router.post('/update-email', authenticate, [
-  body('newEmail').isEmail(),
-  body('password').notEmpty(),
-], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { newEmail, password } = req.body;
-    const userId = req.user.id;
-
-    // Get current user
-    const userResult = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
-    if (userResult.rows.length === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    const user = userResult.rows[0];
-
-    // Verify password
-    const isValid = await bcrypt.compare(password, user.password_hash);
-    if (!isValid) {
-      return res.status(401).json({ message: 'Invalid password' });
-    }
-
-    // Check if new email already exists
-    const emailCheck = await db.query('SELECT id FROM users WHERE email = $1 AND id != $2', [newEmail, userId]);
-    if (emailCheck.rows.length > 0) {
-      return res.status(400).json({ message: 'Email already in use' });
-    }
-
-    // Update email
-    await db.query('UPDATE users SET email = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2', [newEmail, userId]);
-
-    res.json({ message: 'Email updated successfully' });
-  } catch (error) {
-    console.error('Update email error:', error);
-    res.status(500).json({ message: 'Failed to update email' });
-  }
-});
-
 // Change password (authenticated users)
 router.post('/change-password', authenticate, [
   body('oldPassword').isLength({ min: 1 }),
