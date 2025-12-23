@@ -118,7 +118,10 @@ const Profile = () => {
                   name="email"
                   defaultValue={profile?.email || ''}
                   className="input"
+                  disabled
+                  style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                 />
+                <small style={{ color: '#666', fontSize: '0.875rem' }}>Email cannot be changed</small>
               </div>
 
               <button type="submit" className="btn btn-primary" disabled={updateProfileMutation.isLoading}>
