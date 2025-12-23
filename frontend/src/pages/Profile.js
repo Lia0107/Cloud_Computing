@@ -16,6 +16,10 @@ const Profile = () => {
     async () => {
       const response = await api.get('/users/profile');
       return response.data;
+    },
+    {
+      refetchOnMount: 'always',
+      refetchOnWindowFocus: true
     }
   );
 
