@@ -220,6 +220,7 @@ router.get('/admin/all', authenticate, isAdmin, async (req, res) => {
         u.email as user_email,
         u.first_name,
         u.last_name,
+        CASE WHEN u.id IS NULL THEN true ELSE false END as user_deleted,
         json_agg(
           json_build_object(
             'id', oi.id,
