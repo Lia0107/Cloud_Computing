@@ -122,7 +122,7 @@ const AdminDashboard = () => {
                     <div className="order-header">
                       <div>
                         <h3>Order #{order.id}</h3>
-                        <p>Customer: {order.user_email || 'Guest'}</p>
+                        <p>Customer: {order.user_deleted ? 'Deleted User' : (order.user_email || 'Guest')}</p>
                         <p>Date: {new Date(order.created_at).toLocaleString()}</p>
                       </div>
                       <div className="order-actions">
