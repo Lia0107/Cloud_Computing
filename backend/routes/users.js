@@ -25,7 +25,7 @@ router.get('/profile', authenticate, async (req, res) => {
 router.put('/profile', authenticate, [
   body('firstName').optional().trim().notEmpty(),
   body('lastName').optional().trim().notEmpty(),
-  body('email').optional().isEmail().normalizeEmail(),
+  body('email').optional({ checkFalsy: true }).isEmail(),
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -35,23 +35,19 @@ router.put('/profile', authenticate, [
 
     const { firstName, lastName, email } = req.body;
 
-    // Check if email is already taken (if changing email)
+    // Don't allow email changes
     if (email && email !== req.user.email) {
-      const existingUser = await db.query('SELECT id FROM users WHERE email = $1', [email]);
-      if (existingUser.rows.length > 0) {
-        return res.status(400).json({ message: 'Email already in use' });
-      }
+      return res.status(400).json({ message: 'Email cannot be changed' });
     }
 
     const result = await db.query(
       `UPDATE users 
        SET first_name = COALESCE($1, first_name),
            last_name = COALESCE($2, last_name),
-           email = COALESCE($3, email),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $4
+       WHERE id = $3
        RETURNING id, email, first_name, last_name, role`,
-      [firstName, lastName, email, req.user.id]
+      [firstName, lastName, req.user.id]
     );
 
     res.json(result.rows[0]);
