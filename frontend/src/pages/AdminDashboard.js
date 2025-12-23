@@ -18,6 +18,9 @@ const AdminDashboard = () => {
   const { data: me } = useQuery('admin-me', async () => {
     const response = await api.get('/auth/me');
     return response.data.user;
+  }, {
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
 
   const updateOrderStatusMutation = useMutation(
@@ -39,13 +42,17 @@ const AdminDashboard = () => {
     },
     {
       onSuccess: (data) => {
-        setPasswordMsg(data.message || 'Password updated');
+        setPasswordMsg(data.message || 'Password updated successfully!');
         setPasswordErr('');
         setPasswordForm({ oldPassword: '', newPassword: '' });
+        // Clear message after 5 seconds
+        setTimeout(() => setPasswordMsg(''), 5000);
       },
       onError: (error) => {
         setPasswordMsg('');
         setPasswordErr(error.response?.data?.message || 'Failed to update password');
+        // Clear error after 5 seconds
+        setTimeout(() => setPasswordErr(''), 5000);
       },
     }
   );
