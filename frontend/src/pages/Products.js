@@ -20,6 +20,10 @@ const Products = () => {
       params.append('limit', 12);
       const response = await api.get(`/products?${params.toString()}`);
       return response.data;
+    },
+    {
+      refetchInterval: 30000, // Refetch every 30 seconds for real-time stock updates
+      refetchOnWindowFocus: true, // Refetch when user returns to tab
     }
   );
 

@@ -18,6 +18,10 @@ const ProductDetail = () => {
     async () => {
       const response = await api.get(`/products/${id}`);
       return response.data;
+    },
+    {
+      refetchInterval: 30000, // Refetch every 30 seconds for real-time stock updates
+      refetchOnWindowFocus: true, // Refetch when user returns to tab
     }
   );
 
@@ -30,6 +34,7 @@ const ProductDetail = () => {
       onSuccess: () => {
         setMessage('Product added to cart!');
         queryClient.invalidateQueries('cart');
+        queryClient.invalidateQueries(['product', id]); // Refresh product stock
         setTimeout(() => setMessage(''), 3000);
       },
       onError: (error) => {
