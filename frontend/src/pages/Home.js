@@ -1,10 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import './Home.css';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  // Redirect admins to dashboard
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, navigate]);
+
   const { data: products, isLoading } = useQuery('featured-products', async () => {
     const response = await api.get('/products?limit=6');
     return response.data.products;

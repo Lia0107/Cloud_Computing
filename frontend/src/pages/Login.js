@@ -20,7 +20,7 @@ const Login = () => {
       const response = await api.post('/auth/login', formData);
       login(response.data.token, response.data.user);
       const redirectPath = response.data.user.role === 'admin' ? '/admin' : '/';
-      navigate(redirectPath);
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {
