@@ -225,11 +225,6 @@ docker-compose down
 
 ## ☁️ Cloud Deployment
 
-**📖 Complete Guides:**
-- [AWS Academy Deployment Guide](./AWS_ACADEMY_SETUP.md) - Step-by-step AWS setup
-- [Quick Start Guide](./QUICKSTART_AWS_ACADEMY.md) - Fast deployment
-- [Requirements Coverage](./REQUIREMENTS_COVERAGE.md) - Project requirements mapping
-
 ### AWS Deployment Overview
 
 #### 1. Database Setup (RDS PostgreSQL)
