@@ -8,8 +8,6 @@
 
 A production-ready, full-stack e-commerce application deployed on AWS with enterprise-grade scalability, high availability, and security features.
 
-**🌐 Live Demo:** [http://ecommerce-alb-1178391586.us-east-1.elb.amazonaws.com](http://ecommerce-alb-1178391586.us-east-1.elb.amazonaws.com)
-
 **📊 Features:** Multi-AZ deployment • Auto Scaling • Load Balancing • CloudWatch Monitoring • S3 Storage • RDS PostgreSQL
 
 ## 🏗️ Architecture Overview
@@ -104,12 +102,7 @@ Cloud_Computing/
 
 **For complete AWS deployment guide, see:** [AWS_ACADEMY_SETUP.md](./AWS_ACADEMY_SETUP.md)
 
-### Access the Live Application
 
-- **Frontend:** http://ecommerce-alb-1178391586.us-east-1.elb.amazonaws.com
-- **API Endpoint:** http://ecommerce-alb-1178391586.us-east-1.elb.amazonaws.com:5000/api
-
- 
 ## 🚀 Local Development Setup
 
 ### Prerequisites
@@ -236,7 +229,6 @@ docker-compose down
 - [AWS Academy Deployment Guide](./AWS_ACADEMY_SETUP.md) - Step-by-step AWS setup
 - [Quick Start Guide](./QUICKSTART_AWS_ACADEMY.md) - Fast deployment
 - [Requirements Coverage](./REQUIREMENTS_COVERAGE.md) - Project requirements mapping
-- [Architecture Comparison](./ARCHITECTURE_COMPARISON.md) - Design decisions
 
 ### AWS Deployment Overview
 
@@ -498,7 +490,7 @@ curl http://localhost:5000/api/products
 
 ### Database Connection Issues
 - Verify database credentials in `.env`
-- Check if database is running
+- Check if database is running after dual ssh into app server `docker exec -it ecommerce-db psql -h ecommercedb.cpz9losh6eqj.us-east-1.rds.amazonaws.com -U postgres -d ecommerce`
 - Verify network connectivity
 - Check security group rules (cloud)
 
