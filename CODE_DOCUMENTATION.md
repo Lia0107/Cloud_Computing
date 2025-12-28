@@ -20,8 +20,6 @@
 
 A production-ready, full-stack e-commerce application deployed on AWS with enterprise-grade scalability, high availability, and security features. The application supports customer shopping experiences and administrative product/order management.
 
-**Live URL**: http://ecommerce-alb-1178391586.us-east-1.elb.amazonaws.com
-
 ### Key Features
 - **Customer Features**: Product catalog, shopping cart, user authentication, order processing and tracking
 - **Admin Features**: Product management (CRUD), order management, inventory tracking, user management
