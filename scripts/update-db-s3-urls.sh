@@ -3,11 +3,11 @@
 # Run this from your EC2 instance if you have access to RDS
 
 # Database connection details from .env
-DB_HOST="ecommerce-db.cjtmj2ilkkqo.us-east-1.rds.amazonaws.com"
+DB_HOST="your-host"
 DB_PORT="5432"
 DB_NAME="ecommerce"
 DB_USER="postgres"
-DB_PASSWORD="ecommerce123"
+DB_PASSWORD="your-db-password"
 
 echo "Updating product image URLs to S3..."
 
